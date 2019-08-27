@@ -5,7 +5,11 @@ use tokio::codec::{Decoder, Encoder};
 
 use bytes::BytesMut;
 
-use futures::{future, StreamExt, TryStreamExt};
+use futures_util::{
+    future,
+    try_stream::TryStreamExt,
+    stream::StreamExt,
+};
 
 #[cfg(unix)]
 const DEFAULT_TTY: &str = "/dev/ttyUSB0";
@@ -56,7 +60,7 @@ async fn main() {
     reader
         .try_for_each(|s| {
             println!("{:?}", s);
-            future::ready(Ok(()))
+            future::ok(())
         })
         .await
         .unwrap_or_else(|e| eprintln!("{}", e));
